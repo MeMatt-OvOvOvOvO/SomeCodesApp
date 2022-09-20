@@ -2,11 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
-
     <item android:title="READER">
         <menu>
             <item
-                android:id="@+id/barqr"
+                android:id="@+id/nav_barqrcode"
                 android:icon="@drawable/ic_baseline_qr_code_scanner_24"
                 android:title="BARQR" />
         </menu>
@@ -15,11 +14,11 @@
     <item android:title="GENERATOR">
         <menu>
             <item
-                android:id="@+id/barcode"
+                android:id="@+id/nav_barcode"
                 android:icon="@drawable/ic_baseline_view_column_24"
                 android:title="BARcode" />
             <item
-                android:id="@+id/qrcode"
+                android:id="@+id/nav_qrcode"
                 android:icon="@drawable/ic_baseline_qr_code_24"
                 android:title="QRcode" />
         </menu>
@@ -27,7 +26,7 @@
 
     <group >
         <item
-            android:id="@+id/settings"
+            android:id="@+id/nav_settings"
             android:icon="@drawable/ic_baseline_settings_24"
             android:title="SETTINGS" />
     </group>

@@ -3,29 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@+id/nav_barqrcode">
 
     <fragment
-        android:id="@+id/nav_barqr"
-        android:name="com.example.somecodesapp.ui.slideshow.SlideshowFragment"
+        android:id="@+id/nav_barqrcode"
+        android:name="com.example.myapplication.ui.barqrcode.BARQRcodeFragment"
         android:label="@string/menu_barqr"
-        tools:layout="@layout/activity_barqr" />
+        tools:layout="@layout/fragment_barqrcode" />
 
-<!--    <fragment-->
-<!--        android:id="@+id/nav_barcode"-->
-<!--        android:name="com.example.somecodesapp.ui.slideshow.SlideshowFragment"-->
-<!--        android:label="@string/menu_barcode"-->
-<!--        tools:layout="@layout/fragment_slideshow" />-->
+    <fragment
+        android:id="@+id/nav_barcode"
+        android:name="com.example.myapplication.ui.barcode.BarcodeFragment"
+        android:label="@string/menu_barcode"
+        tools:layout="@layout/fragment_barcode" />
 
-<!--    <fragment-->
-<!--        android:id="@+id/nav_qrcode"-->
-<!--        android:name="com.example.somecodesapp.ui.slideshow.SlideshowFragment"-->
-<!--        android:label="@string/menu_qrcode"-->
-<!--        tools:layout="@layout/fragment_slideshow" />-->
-
-<!--    <fragment-->
-<!--        android:id="@+id/nav_settings"-->
-<!--        android:name="com.example.somecodesapp.ui.slideshow.SlideshowFragment"-->
-<!--        android:label="@string/menu_settings"-->
-<!--        tools:layout="@layout/fragment_slideshow" />-->
+    <fragment
+        android:id="@+id/nav_qrcode"
+        android:name="com.example.myapplication.ui.qrcode.QRcodeFragment"
+        android:label="@string/menu_qrcode"
+        tools:layout="@layout/fragment_qrcode" />
 </navigation>
