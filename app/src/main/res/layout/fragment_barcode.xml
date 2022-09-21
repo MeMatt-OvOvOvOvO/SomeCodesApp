@@ -24,6 +24,14 @@
         android:text="generate"
         android:layout_marginTop="60dp"
         />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/butekSave"
+        android:background="@color/black"
+        android:text="@string/save"
+        android:layout_marginTop="120dp"
+        />
 
 
     <ImageView
@@ -32,5 +40,5 @@
         android:id="@+id/iamgevieww"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:layout_marginTop="160dp"/>
+        android:layout_marginTop="200dp"/>
 </RelativeLayout>

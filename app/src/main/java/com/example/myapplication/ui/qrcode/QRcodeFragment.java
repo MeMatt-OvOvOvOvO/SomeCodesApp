@@ -1,8 +1,12 @@
 package com.example.myapplication.ui.qrcode;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +25,19 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 public class QRcodeFragment extends Fragment {
 
     private FragmentQrcodeBinding binding;
     Button butek;
+    Button butekSave;
     EditText text;
+    ImageView imageView;
+    public static long currentTimeMillis;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         QRcodeViewModel qRcodeViewModel =
@@ -36,6 +48,9 @@ public class QRcodeFragment extends Fragment {
 
         butek = binding.butek;
         text = binding.editText;
+        butekSave = binding.butekSave;
+        imageView = binding.iamgevieww;
+
         QRCodeWriter writer = new QRCodeWriter();
         butek.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,9 +65,35 @@ public class QRcodeFragment extends Fragment {
                             bmp.setPixel(x, y, bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE);
                         }
                     }
-                    ((ImageView) binding.iamgevieww).setImageBitmap(bmp);
+                    ((ImageView) imageView).setImageBitmap(bmp);
 
                 } catch (WriterException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        butekSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imageView.buildDrawingCache();
+
+                Bitmap bmp = imageView.getDrawingCache();
+
+                File storageLoc = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES); //context.getExternalFilesDir(null);
+                currentTimeMillis = System.currentTimeMillis();
+                File file = new File(storageLoc, currentTimeMillis + ".jpg");
+
+                try{
+                    FileOutputStream fos = new FileOutputStream(file);
+                    bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                    fos.close();
+
+                    scanFile(getContext(), Uri.fromFile(file));
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -63,6 +104,12 @@ public class QRcodeFragment extends Fragment {
 
 
         return root;
+    }
+    private static void scanFile(Context context, Uri imageUri){
+        Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        scanIntent.setData(imageUri);
+        context.sendBroadcast(scanIntent);
+
     }
 
     @Override

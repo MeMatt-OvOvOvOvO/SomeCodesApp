@@ -16,5 +16,6 @@
     <string name="menu_qrcode">QRcode</string>
     <string name="menu_settings">SETTINGS</string>
     <string name="copy">copy to clipboard</string>
+    <string name="save">save image</string>
 
 </resources>
