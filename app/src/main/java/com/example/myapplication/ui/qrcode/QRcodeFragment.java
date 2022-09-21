@@ -28,7 +28,7 @@ public class QRcodeFragment extends Fragment {
     EditText text;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        QRcodeViewModel slideshowViewModel =
+        QRcodeViewModel qRcodeViewModel =
                 new ViewModelProvider(this).get(QRcodeViewModel.class);
 
         binding = FragmentQrcodeBinding.inflate(inflater, container, false);
