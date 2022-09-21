@@ -15,5 +15,6 @@
     <string name="menu_barcode">BARcode</string>
     <string name="menu_qrcode">QRcode</string>
     <string name="menu_settings">SETTINGS</string>
+    <string name="copy">copy to clipboard</string>
 
 </resources>
