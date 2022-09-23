@@ -1,6 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="horizontal"
     android:layout_height="match_parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editTextt"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:hint="Enter folder's name..."
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:backgroundTint="@color/purple_200"
+        android:id="@+id/butekSaveName"
+        android:text="Save folder's name"/>
+
+
+    <EditText
+        android:id="@+id/editTextWidth"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Enter width..."
+        android:layout_marginTop="150dp"
+        android:layout_marginLeft="30dp"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/editTextHeight"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Enter height..."
+        android:layout_marginLeft="250dp"
+        android:layout_marginTop="150dp"
+        android:inputType="number" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_marginStart="35dp"
+        android:layout_marginEnd="35dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/purple_200"
+        android:layout_marginTop="210dp"
+        android:id="@+id/butekSaveProperties"
+        android:text="Save folder's name"/>
+
+
+</RelativeLayout>

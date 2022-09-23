@@ -2,11 +2,13 @@ package com.example.myapplication.ui.qrcode;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +40,10 @@ public class QRcodeFragment extends Fragment {
     EditText text;
     ImageView imageView;
     public static long currentTimeMillis;
+    public static String SHARED_PREFS = "sharedPrefs";
+    public String pathFromPrefs;
+    public static String TEXT = "text";
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         QRcodeViewModel qRcodeViewModel =
@@ -50,6 +56,10 @@ public class QRcodeFragment extends Fragment {
         text = binding.editText;
         butekSave = binding.butekSave;
         imageView = binding.iamgevieww;
+
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+        pathFromPrefs = sharedPreferences.getString(TEXT, "");
+        Log.d("TAG", pathFromPrefs);
 
         QRCodeWriter writer = new QRCodeWriter();
         butek.setOnClickListener(new View.OnClickListener() {
@@ -80,28 +90,45 @@ public class QRcodeFragment extends Fragment {
 
                 Bitmap bmp = imageView.getDrawingCache();
 
-                File storageLoc = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES); //context.getExternalFilesDir(null);
-                currentTimeMillis = System.currentTimeMillis();
-                File file = new File(storageLoc, currentTimeMillis + ".jpg");
 
-                try{
-                    FileOutputStream fos = new FileOutputStream(file);
-                    bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                    fos.close();
+                if(pathFromPrefs.isEmpty() || pathFromPrefs.equals("default")){
+                    File storageLoc = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES); //context.getExternalFilesDir(null);
+                    currentTimeMillis = System.currentTimeMillis();
+                    File file = new File(storageLoc, currentTimeMillis + ".jpg");
 
-                    scanFile(getContext(), Uri.fromFile(file));
+                    try{
+                        FileOutputStream fos = new FileOutputStream(file);
+                        bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                        fos.close();
 
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                        scanFile(getContext(), Uri.fromFile(file));
+
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }else {
+
+                    File storageLoc = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES + "/" + pathFromPrefs); //context.getExternalFilesDir(null);
+                    currentTimeMillis = System.currentTimeMillis();
+                    File file = new File(storageLoc, currentTimeMillis + ".jpg");
+
+                    try {
+                        FileOutputStream fos = new FileOutputStream(file);
+                        bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                        fos.close();
+
+                        scanFile(getContext(), Uri.fromFile(file));
+
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
-
-
-
-
 
         return root;
     }
