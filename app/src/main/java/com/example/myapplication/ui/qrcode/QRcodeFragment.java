@@ -3,6 +3,7 @@ package com.example.myapplication.ui.qrcode;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -43,6 +45,12 @@ public class QRcodeFragment extends Fragment {
     public static String SHARED_PREFS = "sharedPrefs";
     public String pathFromPrefs;
     public static String TEXT = "text";
+    RelativeLayout layout;
+    public static String BUTEKCOLOR = "butek";
+    public static String BACKCOLOR = "back";
+
+    public String butekColorFromPrefs;
+    public String backColorFromPrefs;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -51,7 +59,7 @@ public class QRcodeFragment extends Fragment {
 
         binding = FragmentQrcodeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
+        layout = binding.layout;
         butek = binding.butek;
         text = binding.editText;
         butekSave = binding.butekSave;
@@ -59,26 +67,43 @@ public class QRcodeFragment extends Fragment {
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         pathFromPrefs = sharedPreferences.getString(TEXT, "");
+        butekColorFromPrefs = sharedPreferences.getString(BUTEKCOLOR, "");
+        backColorFromPrefs = sharedPreferences.getString(BACKCOLOR, "");
+
+        if (butekColorFromPrefs.isEmpty()) {
+            Log.d("TAG", "pusto ");
+        }else if(backColorFromPrefs.isEmpty()){
+            Log.d("TAG", "pusto ");
+        }else {
+            layout.setBackgroundColor(Color.parseColor(backColorFromPrefs));
+            butek.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(butekColorFromPrefs)));
+            butekSave.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(butekColorFromPrefs)));
+        }
+
         Log.d("TAG", pathFromPrefs);
 
         QRCodeWriter writer = new QRCodeWriter();
         butek.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    BitMatrix bitMatrix = writer.encode(text.getText().toString(), BarcodeFormat.QR_CODE, 512, 512);
-                    int width = bitMatrix.getWidth();
-                    int height = bitMatrix.getHeight();
-                    Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-                    for (int x = 0; x < width; x++) {
-                        for (int y = 0; y < height; y++) {
-                            bmp.setPixel(x, y, bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE);
+                if(text.getText().toString().isEmpty()){
+                    Log.d("TAG", "pusty text");
+                }else {
+                    try {
+                        BitMatrix bitMatrix = writer.encode(text.getText().toString(), BarcodeFormat.QR_CODE, 512, 512);
+                        int width = bitMatrix.getWidth();
+                        int height = bitMatrix.getHeight();
+                        Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+                        for (int x = 0; x < width; x++) {
+                            for (int y = 0; y < height; y++) {
+                                bmp.setPixel(x, y, bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE);
+                            }
                         }
-                    }
-                    ((ImageView) imageView).setImageBitmap(bmp);
+                        ((ImageView) imageView).setImageBitmap(bmp);
 
-                } catch (WriterException e) {
-                    e.printStackTrace();
+                    } catch (WriterException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -86,45 +111,49 @@ public class QRcodeFragment extends Fragment {
         butekSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                imageView.buildDrawingCache();
-
-                Bitmap bmp = imageView.getDrawingCache();
-
-
-                if(pathFromPrefs.isEmpty() || pathFromPrefs.equals("default")){
-                    File storageLoc = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES); //context.getExternalFilesDir(null);
-                    currentTimeMillis = System.currentTimeMillis();
-                    File file = new File(storageLoc, currentTimeMillis + ".jpg");
-
-                    try{
-                        FileOutputStream fos = new FileOutputStream(file);
-                        bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                        fos.close();
-
-                        scanFile(getContext(), Uri.fromFile(file));
-
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                if(imageView.getDrawable() == null){
+                    Log.d("TAG", "brak obrazka");
                 }else {
+                    imageView.buildDrawingCache();
 
-                    File storageLoc = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES + "/" + pathFromPrefs); //context.getExternalFilesDir(null);
-                    currentTimeMillis = System.currentTimeMillis();
-                    File file = new File(storageLoc, currentTimeMillis + ".jpg");
+                    Bitmap bmp = imageView.getDrawingCache();
 
-                    try {
-                        FileOutputStream fos = new FileOutputStream(file);
-                        bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                        fos.close();
 
-                        scanFile(getContext(), Uri.fromFile(file));
+                    if (pathFromPrefs.isEmpty() || pathFromPrefs.equals("default")) {
+                        File storageLoc = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES); //context.getExternalFilesDir(null);
+                        currentTimeMillis = System.currentTimeMillis();
+                        File file = new File(storageLoc, currentTimeMillis + ".jpg");
 
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        try {
+                            FileOutputStream fos = new FileOutputStream(file);
+                            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                            fos.close();
+
+                            scanFile(getContext(), Uri.fromFile(file));
+
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+
+                        File storageLoc = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES + "/" + pathFromPrefs); //context.getExternalFilesDir(null);
+                        currentTimeMillis = System.currentTimeMillis();
+                        File file = new File(storageLoc, currentTimeMillis + ".jpg");
+
+                        try {
+                            FileOutputStream fos = new FileOutputStream(file);
+                            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                            fos.close();
+
+                            scanFile(getContext(), Uri.fromFile(file));
+
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }

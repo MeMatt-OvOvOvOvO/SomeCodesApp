@@ -4,15 +4,21 @@ import android.Manifest;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.media.Image;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,10 +51,18 @@ import java.util.concurrent.ExecutionException;
 
 public class BARQRcodeFragment extends Fragment {
 
+    LinearLayout layout;
     private FragmentBarqrcodeBinding binding;
     private EditText scannedText;
     private Button buttonCopyToClipboard;
     private PreviewView previewView;
+
+    public static String BUTEKCOLOR = "butek";
+    public static String BACKCOLOR = "back";
+    public static String SHARED_PREFS = "sharedPrefs";
+    public String butekColorFromPrefs;
+    public String backColorFromPrefs;
+
     private ListenableFuture<ProcessCameraProvider> cameraProviderListenableFuture;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -57,10 +71,24 @@ public class BARQRcodeFragment extends Fragment {
 
         binding = FragmentBarqrcodeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
+        layout = binding.layout;
         scannedText = binding.scannedText;
         buttonCopyToClipboard = binding.copyToClip;
         previewView = binding.camera;
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+
+        butekColorFromPrefs = sharedPreferences.getString(BUTEKCOLOR, "");
+        backColorFromPrefs = sharedPreferences.getString(BACKCOLOR, "");
+
+        if (butekColorFromPrefs.isEmpty()) {
+            Log.d("TAG", "pusto ");
+        }else if(backColorFromPrefs.isEmpty()){
+            Log.d("TAG", "pusto ");
+        }else {
+            layout.setBackgroundColor(Color.parseColor(backColorFromPrefs));
+            buttonCopyToClipboard.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(butekColorFromPrefs)));
+        }
 
         if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED){
             init();

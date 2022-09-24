@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
+    android:id="@+id/layout"
     tools:context=".ui.qrcode.QRcodeFragment"
     android:orientation="horizontal">
 
@@ -23,7 +24,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:text="generate"
-        android:backgroundTint="@color/purple_200"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:layout_marginTop="60dp"
         />
     <Button
@@ -32,7 +33,7 @@
         android:id="@+id/butekSave"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:backgroundTint="@color/purple_200"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:text="@string/save"
         android:layout_marginTop="120dp"
         />

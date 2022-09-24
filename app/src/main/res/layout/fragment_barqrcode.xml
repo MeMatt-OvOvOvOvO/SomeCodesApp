@@ -4,8 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/layout"
     android:orientation="vertical"
-    tools:context=".ui.barqrcode.BARQRcodeFragment">
+    tools:context=".ui.barqrcode.BARQRcodeFragment"
+    tools:ignore="InvalidId">
 
     <EditText
         android:layout_width="match_parent"
@@ -17,7 +19,7 @@
         android:id="@+id/copyToClip"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:backgroundTint="@color/purple_200"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:text="@string/copy"
         />
     <androidx.camera.view.PreviewView

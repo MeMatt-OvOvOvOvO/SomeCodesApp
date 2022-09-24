@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:gravity="center_horizontal"
     android:orientation="horizontal"
+    android:id="@+id/layout"
     android:layout_height="match_parent">
 
     <EditText
@@ -20,7 +21,7 @@
         android:layout_marginTop="70dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:backgroundTint="@color/purple_200"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:id="@+id/butekSaveName"
         android:text="Save folder's name"/>
 
@@ -50,10 +51,50 @@
         android:layout_marginStart="35dp"
         android:layout_marginEnd="35dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/purple_200"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:layout_marginTop="210dp"
         android:id="@+id/butekSaveProperties"
-        android:text="Save folder's name"/>
+        android:text="Save properties"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="280dp"
+        android:text="Themes"
+        android:textAlignment="center"
+        android:textSize="25dp"
+        />
+
+    <Button
+        android:id="@+id/butekTheme1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="310dp"
+        android:layout_marginEnd="35dp"
+        android:backgroundTint="@color/colorPrimaryPurple"
+        android:text="Theme 1" />
+
+    <Button
+        android:id="@+id/butekTheme2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="360dp"
+        android:layout_marginEnd="35dp"
+        android:backgroundTint="@color/colorPrimaryDarkPurple"
+        android:text="Theme 2" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_marginStart="35dp"
+        android:layout_marginEnd="35dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorAccentPurple"
+        android:layout_marginTop="410dp"
+        android:id="@+id/butekTheme3"
+        android:text="Theme 3"/>
+
+
 
 
 </RelativeLayout>

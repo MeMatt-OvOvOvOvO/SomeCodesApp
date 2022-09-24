@@ -5,8 +5,10 @@
     android:layout_width="match_parent"
     android:gravity="center_horizontal"
     android:layout_height="match_parent"
+    android:id="@+id/layout"
     android:orientation="horizontal"
-    tools:context=".ui.barcode.BarcodeFragment">
+    tools:context=".ui.barcode.BarcodeFragment"
+    tools:ignore="InvalidId">
 
     <EditText
         android:layout_width="match_parent"
@@ -22,7 +24,7 @@
         android:id="@+id/butek"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:backgroundTint="@color/purple_200"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:text="generate"
         android:layout_marginTop="60dp"
         />
@@ -32,7 +34,7 @@
         android:id="@+id/butekSave"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:backgroundTint="@color/purple_200"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:text="@string/save"
         android:layout_marginTop="120dp"
         />

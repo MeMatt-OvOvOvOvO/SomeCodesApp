@@ -3,6 +3,7 @@ package com.example.myapplication.ui.barcode;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -40,10 +42,20 @@ public class BarcodeFragment extends Fragment {
     EditText text;
     Button butekSave;
     ImageView imageView;
+    RelativeLayout layout;
     public static long currentTimeMillis;
     public static String SHARED_PREFS = "sharedPrefs";
     public String pathFromPrefs;
+    public Integer widthFromPrefs;
+    public Integer heightFromPrefs;
     public static String TEXT = "text";
+    public static String INTWIDTH = "intwidth";
+    public static String INTHEIGHT = "intheight";
+    public static String BUTEKCOLOR = "butek";
+    public static String BACKCOLOR = "back";
+
+    public String butekColorFromPrefs;
+    public String backColorFromPrefs;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -52,7 +64,7 @@ public class BarcodeFragment extends Fragment {
 
         binding = FragmentBarcodeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
+        layout = binding.layout;
         butek = binding.butek;
         text = binding.editText;
         butekSave = binding.butekSave;
@@ -60,25 +72,55 @@ public class BarcodeFragment extends Fragment {
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         pathFromPrefs = sharedPreferences.getString(TEXT, "");
-        Log.d("TAG", pathFromPrefs);
+        widthFromPrefs = sharedPreferences.getInt(INTWIDTH, 0);
+        heightFromPrefs = sharedPreferences.getInt(INTHEIGHT, 0);
+        butekColorFromPrefs = sharedPreferences.getString(BUTEKCOLOR, "");
+        backColorFromPrefs = sharedPreferences.getString(BACKCOLOR, "");
+        Log.d("TAG", heightFromPrefs.toString());
+        Log.d("TAG", widthFromPrefs.toString());
+
+        if (butekColorFromPrefs.isEmpty()) {
+            Log.d("TAG", "pusto ");
+        }else if(backColorFromPrefs.isEmpty()){
+            Log.d("TAG", "pusto ");
+        }else {
+            layout.setBackgroundColor(Color.parseColor(backColorFromPrefs));
+            butek.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(butekColorFromPrefs)));
+            butekSave.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(butekColorFromPrefs)));
+        }
+
+        if (widthFromPrefs.equals(0) && heightFromPrefs.equals(0)){
+            widthFromPrefs = 512;
+            heightFromPrefs = 512;
+        }else if (widthFromPrefs.equals(0)){
+            widthFromPrefs = 512;
+        }else if (heightFromPrefs.equals(0)){
+            heightFromPrefs = 512;
+        }
 
         butek.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    BitMatrix bitMatrix = new MultiFormatWriter().encode(text.getText().toString(), BarcodeFormat.CODE_128, 512, 512);
-                    int width = bitMatrix.getWidth();
-                    int height = bitMatrix.getHeight();
-                    Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-                    for (int x = 0; x < width; x++) {
-                        for (int y = 0; y < height; y++) {
-                            bmp.setPixel(x, y, bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE);
+                if(text.getText().toString().isEmpty()){
+                    Log.d("TAG", "pusty text");
+                }else {
+                    try {
+                        BitMatrix bitMatrix = new MultiFormatWriter().encode(text.getText().toString(), BarcodeFormat.CODE_128, 512, 512);
+                        int width = bitMatrix.getWidth();
+                        int height = bitMatrix.getHeight();
+                        Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+                        for (int x = 0; x < width; x++) {
+                            for (int y = 0; y < height; y++) {
+                                bmp.setPixel(x, y, bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE);
+                            }
                         }
-                    }
-                    ((ImageView) imageView).setImageBitmap(bmp);
 
-                } catch (WriterException e) {
-                    e.printStackTrace();
+
+                        ((ImageView) imageView).setImageBitmap(bmp);
+
+                    } catch (WriterException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -86,44 +128,46 @@ public class BarcodeFragment extends Fragment {
         butekSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                imageView.buildDrawingCache();
+                if(imageView.getDrawable() == null){
+                    Log.d("TAG", "brak obrazka");
+                }else{
+                    imageView.buildDrawingCache();
+                    Bitmap bmp = imageView.getDrawingCache();
+                    if(pathFromPrefs.isEmpty() || pathFromPrefs.equals("default")){
+                        File storageLoc = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES); //context.getExternalFilesDir(null);
+                        currentTimeMillis = System.currentTimeMillis();
+                        File file = new File(storageLoc, currentTimeMillis + ".jpg");
 
-                Bitmap bmp = imageView.getDrawingCache();
+                        try{
+                            FileOutputStream fos = new FileOutputStream(file);
+                            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                            fos.close();
 
-                if(pathFromPrefs.isEmpty() || pathFromPrefs.equals("default")){
-                    File storageLoc = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES); //context.getExternalFilesDir(null);
-                    currentTimeMillis = System.currentTimeMillis();
-                    File file = new File(storageLoc, currentTimeMillis + ".jpg");
+                            scanFile(getContext(), Uri.fromFile(file));
 
-                    try{
-                        FileOutputStream fos = new FileOutputStream(file);
-                        bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                        fos.close();
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }else {
 
-                        scanFile(getContext(), Uri.fromFile(file));
+                        File storageLoc = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES + "/" + pathFromPrefs); //context.getExternalFilesDir(null);
+                        currentTimeMillis = System.currentTimeMillis();
+                        File file = new File(storageLoc, currentTimeMillis + ".jpg");
 
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }else {
+                        try {
+                            FileOutputStream fos = new FileOutputStream(file);
+                            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                            fos.close();
 
-                    File storageLoc = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES + "/" + pathFromPrefs); //context.getExternalFilesDir(null);
-                    currentTimeMillis = System.currentTimeMillis();
-                    File file = new File(storageLoc, currentTimeMillis + ".jpg");
+                            scanFile(getContext(), Uri.fromFile(file));
 
-                    try {
-                        FileOutputStream fos = new FileOutputStream(file);
-                        bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                        fos.close();
-
-                        scanFile(getContext(), Uri.fromFile(file));
-
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
