@@ -99,7 +99,7 @@ public class QRcodeFragment extends Fragment {
                                 bmp.setPixel(x, y, bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE);
                             }
                         }
-                        ((ImageView) imageView).setImageBitmap(bmp);
+                        imageView.setImageBitmap(bmp);
 
                     } catch (WriterException e) {
                         e.printStackTrace();

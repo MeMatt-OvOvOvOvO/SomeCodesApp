@@ -116,7 +116,7 @@ public class BarcodeFragment extends Fragment {
                         }
 
 
-                        ((ImageView) imageView).setImageBitmap(bmp);
+                        imageView.setImageBitmap(bmp);
 
                     } catch (WriterException e) {
                         e.printStackTrace();

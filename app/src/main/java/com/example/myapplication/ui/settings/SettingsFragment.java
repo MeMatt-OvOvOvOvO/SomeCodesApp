@@ -26,6 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -83,9 +84,9 @@ public class SettingsFragment extends Fragment {
 
         editText = binding.editTextt;
         button = binding.butekSaveName;
-        eTWidth = binding.editTextWidth;
-        eTHeight = binding.editTextHeight;
-        buttonProperties = binding.butekSaveProperties;
+//        eTWidth = binding.editTextWidth;
+//        eTHeight = binding.editTextHeight;
+//        buttonProperties = binding.butekSaveProperties;
         bTheme1 = binding.butekTheme1;
         bTheme2 = binding.butekTheme2;
         bTheme3 = binding.butekTheme3;
@@ -108,11 +109,9 @@ public class SettingsFragment extends Fragment {
             buttonProperties.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(butekColorFromPrefs)));
         }
 
-
         bTheme1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
                 editor.putString(BUTEKCOLOR, "#D213F2"); //rozowy
